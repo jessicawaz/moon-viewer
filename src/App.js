@@ -47,11 +47,12 @@ function App() {
     }
 
     // Convert azimuth (radians) to compass bearing (degrees from north, clockwise)
-    let moonAzimuthDeg = (moonPos.azimuth * 180) / Math.PI; // radians to degrees
-    moonAzimuthDeg = (moonAzimuthDeg + 180) % 360; // south to north
+    let moonAzimuthDeg = (moonPos.azimuth * 180) / Math.PI;
+    moonAzimuthDeg = (moonAzimuthDeg + 180) % 360;
 
-    // deviceAlpha is degrees from north (0-360)
-    const diff = (moonAzimuthDeg - deviceAlpha + 360) % 360;
+    // Calculate shortest angle difference, normalized to [-180, 180]
+    let diff = moonAzimuthDeg - deviceAlpha;
+    diff = ((diff + 540) % 360) - 180;
     setRotation(diff);
   }, [moonPos, deviceAlpha]);
 
