@@ -78,7 +78,6 @@ function App() {
     getDeviceOrientation();
     updateMoonPosition();
     updateMoonVisibility();
-    getUserLocation();
 
     // Only start camera if user has pressed the button
     if (cameraStarted) {
@@ -130,7 +129,7 @@ function App() {
           zIndex: 1000,
         }}
       >
-       lat: {userLocation.lat} <br />
+        lat: {userLocation.lat} <br />
         long: {userLocation.long}
       </div>
 
@@ -202,7 +201,7 @@ function App() {
             position: "absolute",
             top: "55%",
             left: "50%",
-            transform: "translate(-50%, -45%)",
+            transform: "translate(-50%, -50%)",
             fontSize: "1rem",
             padding: "1rem 2rem",
             zIndex: 1000,
@@ -217,6 +216,32 @@ function App() {
           Access Camera
         </button>
       )}
+
+      {userLocation.lat === null || userLocation.long === null ? (
+        <button
+          style={{
+            position: "absolute",
+            top: "65%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            fontSize: "1rem",
+            padding: "1rem 2rem",
+            zIndex: 1000,
+            background: "#222",
+            color: "#fff",
+            border: "none",
+            borderRadius: 8,
+            boxShadow: "0 2px 8px #0008",
+          }}
+          onClick={() => {
+            if (window.confirm("Allow this app to access your location?")) {
+              getUserLocation();
+            }
+          }}
+        >
+          Access Location
+        </button>
+      ) : null}
 
       {/* Points towards the moon direction */}
       {
