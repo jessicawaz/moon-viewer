@@ -12,6 +12,10 @@ function App() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [rotation, setRotation] = useState(0);
   const [cameraStarted, setCameraStarted] = useState(false);
+  const [moonVisibilityTimes, setMoonVisibilityTimes] = useState({
+    rise: null,
+    set: null,
+  });
 
   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -56,17 +60,31 @@ function App() {
     setRotation(diff);
   }, [moonPos, deviceAlpha]);
 
+  const updateMoonVisibility = useCallback(() => {
+    const moonSetRiseTimes = SunCalc.getMoonTimes(
+      new Date(),
+      userLocation.lat,
+      userLocation.long
+    );
+
+    setMoonVisibilityTimes({
+      rise: moonSetRiseTimes.rise,
+      set: moonSetRiseTimes.set,
+    });
+  }, [userLocation.lat, userLocation.long]);
+
   // Get user location and device orientation once on mount
   useEffect(() => {
     getUserLocation();
     getDeviceOrientation();
     getUserLocation();
     updateMoonPosition();
+    updateMoonVisibility();
     // Only start camera if user has pressed the button
     if (cameraStarted) {
       getDeviceCamera();
     }
-  }, [updateMoonPosition, cameraStarted]);
+  }, [updateMoonPosition, cameraStarted, updateMoonVisibility]);
 
   // Update moon position when user location changes
   useEffect(() => {
@@ -103,10 +121,28 @@ function App() {
           left: "50%",
           transform: "translateX(-50%)",
           fontSize: "2rem",
+          zIndex: 1000
         }}
       >
         Moon-Viewer
       </div>
+
+      {!moonVisibilityTimes && (
+        <div
+          style={{
+            position: "absolute",
+            top: 40,
+            left: "50%",
+            transform: "translateX(-50%)",
+            fontSize: "2rem",
+            zIndex: 1000
+          }}
+        >
+          The Moon will be visible from
+          {moonVisibilityTimes.rise?.toLocaleTimeString()} to
+          {moonVisibilityTimes.set?.toLocaleTimeString()}
+        </div>
+      )}
 
       {errorMessage && (
         <div
