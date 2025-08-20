@@ -78,6 +78,8 @@ function App() {
     getDeviceOrientation();
     updateMoonPosition();
     updateMoonVisibility();
+    getUserLocation();
+    
     // Only start camera if user has pressed the button
     if (cameraStarted) {
       getDeviceCamera();
@@ -212,32 +214,6 @@ function App() {
           onClick={() => setCameraStarted(true)}
         >
           Access Camera
-        </button>
-      )}
-
-      {!userLocation.lat && !userLocation.long && (
-        <button
-          style={{
-            position: "absolute",
-            top: "65%",
-            left: "50%",
-            transform: "translate(-50%, -35%)",
-            fontSize: "1rem",
-            padding: "1rem 2rem",
-            zIndex: 1000,
-            background: "#222",
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            boxShadow: "0 2px 8px #0008",
-          }}
-          onClick={() => {
-            if (window.confirm("Allow this app to access your location?")) {
-              getUserLocation();
-            }
-          }}
-        >
-          Access Location
         </button>
       )}
 
