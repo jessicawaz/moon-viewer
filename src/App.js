@@ -112,6 +112,14 @@ function App() {
       setErrorMessage("Enable access to camera");
     }
   };
+  const dateType = {
+    locales: "en-US",
+    options: {
+      timeZone: "America/New_York",
+      dateStyle: "medium",
+      timeStyle: "short",
+    },
+  };
 
   return (
     <div className="App">
@@ -140,23 +148,15 @@ function App() {
       >
         {moonVisibilityTimes.rise && moonVisibilityTimes.set
           ? `The Moon will be visible from
-        ${moonVisibilityTimes.rise?.toLocaleTimeString("en-US", {
-          timeZone: "America/New_York",
-          timeStyle: "short",
-        })} to
-        ${moonVisibilityTimes.set?.toLocaleTimeString("en-US", {
-          timeZone: "America/New_York",
-          timeStyle: "short",
-        })} (Eastern)`
+        ${moonVisibilityTimes.rise?.toLocaleString(dateType)} to
+        ${moonVisibilityTimes.set?.toLocaleString(dateType)} (Eastern)`
           : moonVisibilityTimes.rise && !moonVisibilityTimes.set
-          ? `The Moon will be visible starting at ${moonVisibilityTimes.rise?.toLocaleTimeString(
-              "en-US",
-              { timeZone: "America/New_York", timeStyle: "short" }
+          ? `The Moon will be visible starting at ${moonVisibilityTimes.rise?.toLocaleString(
+              dateType
             )} (Eastern)`
           : !moonVisibilityTimes.rise && moonVisibilityTimes.set
-          ? `The Moon is visible now through ${moonVisibilityTimes.set?.toLocaleTimeString(
-              "en-US",
-              { timeZone: "America/New_York", timeStyle: "short" }
+          ? `The Moon is visible now through ${moonVisibilityTimes.set?.toLocaleString(
+              dateType
             )} (Eastern)`
           : "The moon will not be visible tonight."}
       </div>
