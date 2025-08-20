@@ -64,7 +64,8 @@ function App() {
     const moonSetRiseTimes = SunCalc.getMoonTimes(
       new Date(),
       userLocation.lat,
-      userLocation.long
+      userLocation.long,
+      true
     );
 
     setMoonVisibilityTimes({
@@ -117,32 +118,48 @@ function App() {
       <div
         style={{
           position: "absolute",
-          top: 40,
+          top: 50,
           left: "50%",
           transform: "translateX(-50%)",
           fontSize: "2rem",
-          zIndex: 1000
+          zIndex: 1000,
         }}
       >
         Moon-Viewer
       </div>
 
-      {!moonVisibilityTimes && (
-        <div
-          style={{
-            position: "absolute",
-            top: 80,
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontSize: "1rem",
-            zIndex: 1000
-          }}
-        >
-          The Moon will be visible from
-          {moonVisibilityTimes.rise?.toLocaleTimeString()} to
-          {moonVisibilityTimes.set?.toLocaleTimeString()}
-        </div>
-      )}
+      <div
+        style={{
+          position: "absolute",
+          top: 90,
+          left: "50%",
+          transform: "translateX(-50%)",
+          fontSize: "1rem",
+          zIndex: 1000,
+        }}
+      >
+        {moonVisibilityTimes.rise && moonVisibilityTimes.set
+          ? `The Moon will be visible from
+        ${moonVisibilityTimes.rise?.toLocaleTimeString("en-US", {
+          timeZone: "America/New_York",
+          timeStyle: "short",
+        })} to
+        ${moonVisibilityTimes.set?.toLocaleTimeString("en-US", {
+          timeZone: "America/New_York",
+          timeStyle: "short",
+        })} (Eastern)`
+          : moonVisibilityTimes.rise && !moonVisibilityTimes.set
+          ? `The Moon will be visible starting at ${moonVisibilityTimes.rise?.toLocaleTimeString(
+              "en-US",
+              { timeZone: "America/New_York", timeStyle: "short" }
+            )} (Eastern)`
+          : !moonVisibilityTimes.rise && moonVisibilityTimes.set
+          ? `The Moon is visible now through ${moonVisibilityTimes.set?.toLocaleTimeString(
+              "en-US",
+              { timeZone: "America/New_York", timeStyle: "short" }
+            )} (Eastern)`
+          : "The moon will not be visible tonight."}
+      </div>
 
       {errorMessage && (
         <div
