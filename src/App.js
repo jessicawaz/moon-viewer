@@ -18,12 +18,24 @@ function App() {
   });
 
   const getUserLocation = () => {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      return setUserLocation({
-        lat: pos.coords.latitude,
-        long: pos.coords.longitude,
-      });
-    });
+    if (!navigator.geolocation) {
+      setErrorMessage("Geolocation is not supported by your browser.");
+      setUserLocation({ lat: "N/A", long: "N/A" });
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLocation({
+          lat: pos.coords.latitude,
+          long: pos.coords.longitude,
+        });
+        setErrorMessage(null);
+      },
+      (err) => {
+        setErrorMessage("Location access denied or unavailable.");
+        setUserLocation({ lat: "N/A", long: "N/A" });
+      }
+    );
   };
 
   const updateMoonPosition = useCallback(() => {
@@ -73,9 +85,8 @@ function App() {
     });
   }, [userLocation.lat, userLocation.long]);
 
-  // Get user location and device orientation once on mount
+  // Get device orientation once on mount
   useEffect(() => {
-    getUserLocation();
     getDeviceOrientation();
     updateMoonPosition();
     updateMoonVisibility();
@@ -129,9 +140,29 @@ function App() {
           zIndex: 1000,
         }}
       >
-        lat: {userLocation.lat} <br/>
+        lat: {userLocation.lat} <br />
         long: {userLocation.long}
       </div>
+
+      <button
+        style={{
+          position: "absolute",
+          top: "60%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          fontSize: "1rem",
+          padding: "1rem 2rem",
+          zIndex: 1000,
+          background: "#222",
+          color: "#fff",
+          border: "none",
+          borderRadius: 8,
+          boxShadow: "0 2px 8px #0008",
+        }}
+        onClick={getUserLocation}
+      >
+        Request Location
+      </button>
 
       <div
         style={{
@@ -211,7 +242,7 @@ function App() {
           }}
           onClick={() => setCameraStarted(true)}
         >
-          Start Camera
+          Request Camera
         </button>
       )}
 
