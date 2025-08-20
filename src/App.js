@@ -94,7 +94,18 @@ function App() {
   };
 
   return (
-  <div className="App">
+    <div className="App">
+      <div
+        style={{
+          position: "absolute",
+          top: 10,
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        Moon-Viewer
+      </div>
+
       {errorMessage && (
         <div
           style={{
