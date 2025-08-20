@@ -131,10 +131,10 @@ function App() {
         <div
           style={{
             position: "absolute",
-            top: 40,
+            top: 80,
             left: "50%",
             transform: "translateX(-50%)",
-            fontSize: "2rem",
+            fontSize: "1rem",
             zIndex: 1000
           }}
         >
