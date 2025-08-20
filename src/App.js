@@ -64,8 +64,7 @@ function App() {
     const moonSetRiseTimes = SunCalc.getMoonTimes(
       new Date(),
       userLocation.lat,
-      userLocation.long,
-      true
+      userLocation.long
     );
 
     setMoonVisibilityTimes({
@@ -76,9 +75,7 @@ function App() {
 
   // Get user location and device orientation once on mount
   useEffect(() => {
-    getUserLocation();
     getDeviceOrientation();
-    getUserLocation();
     updateMoonPosition();
     updateMoonVisibility();
     // Only start camera if user has pressed the button
@@ -112,13 +109,11 @@ function App() {
       setErrorMessage("Enable access to camera");
     }
   };
-  const dateType = {
-    locales: "en-US",
-    options: {
-      timeZone: "America/New_York",
-      dateStyle: "medium",
-      timeStyle: "short",
-    },
+  const dateLocales = "en-US";
+  const dateOptions = {
+    timeZone: "America/New_York",
+    dateStyle: "medium",
+    timeStyle: "short",
   };
 
   return (
@@ -136,30 +131,37 @@ function App() {
         Moon-Viewer
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          top: 90,
-          left: "50%",
-          transform: "translateX(-50%)",
-          fontSize: "1rem",
-          zIndex: 1000,
-        }}
-      >
-        {moonVisibilityTimes.rise && moonVisibilityTimes.set
-          ? `The Moon will be visible from
-        ${moonVisibilityTimes.rise?.toLocaleString(dateType)} to
-        ${moonVisibilityTimes.set?.toLocaleString(dateType)} (Eastern)`
-          : moonVisibilityTimes.rise && !moonVisibilityTimes.set
-          ? `The Moon will be visible starting at ${moonVisibilityTimes.rise?.toLocaleString(
-              dateType
-            )} (Eastern)`
-          : !moonVisibilityTimes.rise && moonVisibilityTimes.set
-          ? `The Moon is visible now through ${moonVisibilityTimes.set?.toLocaleString(
-              dateType
-            )} (Eastern)`
-          : "The moon will not be visible tonight."}
-      </div>
+      {userLocation.lat && userLocation.long && (
+        <div
+          style={{
+            position: "absolute",
+            top: 90,
+            left: "50%",
+            transform: "translateX(-50%)",
+            fontSize: "1rem",
+            zIndex: 1000,
+          }}
+        >
+          {moonVisibilityTimes.rise && moonVisibilityTimes.set
+            ? `The Moon will be visible from
+        ${moonVisibilityTimes.rise?.toLocaleString(dateLocales, dateOptions)} to
+        ${moonVisibilityTimes.set?.toLocaleString(
+          dateLocales,
+          dateOptions
+        )} (Eastern)`
+            : moonVisibilityTimes.rise && !moonVisibilityTimes.set
+            ? `The Moon will be visible starting at ${moonVisibilityTimes.rise?.toLocaleString(
+                dateLocales,
+                dateOptions
+              )} (Eastern)`
+            : !moonVisibilityTimes.rise && moonVisibilityTimes.set
+            ? `The Moon is visible now through ${moonVisibilityTimes.set?.toLocaleString(
+                dateLocales,
+                dateOptions
+              )} (Eastern)`
+            : "The moon will not be visible tonight."}
+        </div>
+      )}
 
       {errorMessage && (
         <div
@@ -195,10 +197,10 @@ function App() {
         <button
           style={{
             position: "absolute",
-            top: "50%",
+            top: "55%",
             left: "50%",
-            transform: "translate(-50%, -50%)",
-            fontSize: "2rem",
+            transform: "translate(-50%, -45%)",
+            fontSize: "1rem",
             padding: "1rem 2rem",
             zIndex: 1000,
             background: "#222",
@@ -209,12 +211,38 @@ function App() {
           }}
           onClick={() => setCameraStarted(true)}
         >
-          Start Camera
+          Access Camera
+        </button>
+      )}
+
+      {!userLocation.lat && !userLocation.long && (
+        <button
+          style={{
+            position: "absolute",
+            top: "65%",
+            left: "50%",
+            transform: "translate(-50%, -35%)",
+            fontSize: "1rem",
+            padding: "1rem 2rem",
+            zIndex: 1000,
+            background: "#222",
+            color: "#fff",
+            border: "none",
+            borderRadius: 8,
+            boxShadow: "0 2px 8px #0008",
+          }}
+          onClick={() => {
+            if (window.confirm("Allow this app to access your location?")) {
+              getUserLocation();
+            }
+          }}
+        >
+          Access Location
         </button>
       )}
 
       {/* Points towards the moon direction */}
-      <div
+      {<div
         id="pointer"
         style={{
           position: "absolute",
@@ -227,7 +255,7 @@ function App() {
         }}
       >
         <CiLocationArrow1 size={60} />
-      </div>
+      </div>}
     </div>
   );
 }
