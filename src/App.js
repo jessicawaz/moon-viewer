@@ -98,9 +98,10 @@ function App() {
       <div
         style={{
           position: "absolute",
-          top: 10,
+          top: 40,
           left: "50%",
           transform: "translateX(-50%)",
+          fontSize: "2rem",
         }}
       >
         Moon-Viewer
@@ -110,10 +111,11 @@ function App() {
         <div
           style={{
             position: "absolute",
-            top: "10px",
+            bottom: "20px",
             fontSize: "1.5rem",
             left: "50%",
             transform: "translateX(-50%)",
+            width: "100dvw",
           }}
         >
           {errorMessage}
@@ -128,8 +130,8 @@ function App() {
           ref={cameraRef}
           style={{
             position: "absolute",
-            width: "100vw",
-            height: "100vh",
+            width: "100dvw",
+            height: "100dvh",
             objectFit: "cover",
             zIndex: 0,
             left: 0,
