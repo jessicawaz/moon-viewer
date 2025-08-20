@@ -32,7 +32,7 @@ function App() {
         setErrorMessage(null);
       },
       (err) => {
-        setErrorMessage("Location access denied or unavailable.");
+        setErrorMessage(err.message || String(err));
         setUserLocation({ lat: "N/A", long: "N/A" });
       }
     );
