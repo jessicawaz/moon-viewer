@@ -75,8 +75,8 @@ function App() {
 
   // Get user location and device orientation once on mount
   useEffect(() => {
-    getDeviceOrientation();
     getUserLocation();
+    getDeviceOrientation();
     updateMoonPosition();
     updateMoonVisibility();
     // Only start camera if user has pressed the button
