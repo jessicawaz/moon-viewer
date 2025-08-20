@@ -79,7 +79,7 @@ function App() {
     updateMoonPosition();
     updateMoonVisibility();
     getUserLocation();
-    
+
     // Only start camera if user has pressed the button
     if (cameraStarted) {
       getDeviceCamera();
@@ -130,7 +130,8 @@ function App() {
           zIndex: 1000,
         }}
       >
-        Moon-Viewer
+       lat: {userLocation.lat} <br />
+        long: {userLocation.long}
       </div>
 
       {userLocation.lat && userLocation.long && (
@@ -218,20 +219,22 @@ function App() {
       )}
 
       {/* Points towards the moon direction */}
-      {<div
-        id="pointer"
-        style={{
-          position: "absolute",
-          bottom: "50%",
-          left: "50%",
-          background: "none",
-          pointerEvents: "none",
-          zIndex: 10,
-          transform: `translate(-50%,-50%) rotate(${rotation}deg)`,
-        }}
-      >
-        <CiLocationArrow1 size={60} />
-      </div>}
+      {
+        <div
+          id="pointer"
+          style={{
+            position: "absolute",
+            bottom: "50%",
+            left: "50%",
+            background: "none",
+            pointerEvents: "none",
+            zIndex: 10,
+            transform: `translate(-50%,-50%) rotate(${rotation}deg)`,
+          }}
+        >
+          <CiLocationArrow1 size={60} />
+        </div>
+      }
     </div>
   );
 }
