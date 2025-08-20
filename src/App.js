@@ -10,6 +10,7 @@ function App() {
   const [userLocation, setUserLocation] = useState({ lat: null, long: null });
   const [deviceAlpha, setDeviceAlpha] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [rotation, setRotation] = useState(0);
 
   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -31,19 +32,18 @@ function App() {
   }, [userLocation.lat, userLocation.long]);
 
   const getDeviceOrientation = () => {
-    // Only add event listener if supported and not simulating
-    if (window.isSimulatingAlpha) return;
     if (typeof DeviceOrientationEvent.requestPermission === "function") {
       DeviceOrientationEvent.requestPermission();
     }
-    window.addEventListener("deviceorientationabsolute", (e) => {
+    window.addEventListener("deviceorientation", (e) => {
       setDeviceAlpha(e.alpha);
     });
   };
+  
+  console.log({ deviceAlpha, moonPos, userLocation, rotation });
 
   const updatePointer = useCallback(() => {
-    const pointer = document.getElementById("pointer");
-    if (!pointer || !moonPos || deviceAlpha === null) {
+    if (!moonPos || deviceAlpha === null) {
       return;
     }
 
@@ -53,8 +53,7 @@ function App() {
 
     // deviceAlpha is degrees from north (0-360)
     const diff = (moonAzimuthDeg - deviceAlpha + 360) % 360;
-    console.log({ moonAzimuthDeg, diff });
-    pointer.style.transform = `translate(-50%, -50%) rotate(${diff}deg)`;
+    setRotation(diff);
   }, [moonPos, deviceAlpha]);
 
   // Get user location and device orientation once on mount
@@ -63,7 +62,7 @@ function App() {
     getDeviceOrientation();
     getUserLocation();
     updateMoonPosition();
-    getDeviceCamera();
+    // getDeviceCamera();
   }, [updateMoonPosition]);
 
   // Update moon position when user location changes
@@ -128,22 +127,23 @@ function App() {
         id="pointer"
         style={{
           position: "absolute",
-          bottom: 70,
+          bottom: "20%",
           left: "50%",
           background: "none",
           pointerEvents: "none",
           zIndex: 10,
+          transform: `translateX(-50%) rotate(${rotation}deg)`,
         }}
       >
         <CiLocationArrow1 size={60} />
       </div>
 
       {/* Simulate on desktop with a scroller */}
-      {typeof window !== "undefined" && (
+      {!navigator.userAgentData.mobile && (
         <div
           style={{
             position: "absolute",
-            bottom: 40,
+            bottom: "10%",
             left: "50%",
             transform: "translateX(-50%)",
             background: "#fff8",
