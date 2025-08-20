@@ -39,8 +39,6 @@ function App() {
       setDeviceAlpha(e.alpha);
     });
   };
-  
-  console.log({ deviceAlpha, moonPos, userLocation, rotation });
 
   const updatePointer = useCallback(() => {
     if (!moonPos || deviceAlpha === null) {
@@ -93,6 +91,8 @@ function App() {
 
   return (
     <div className="App">
+      <div>{`alpha: ${deviceAlpha}, moon: ${moonPos?.azimuth}, user: ${userLocation?.lat}
+       ${userLocation?.long}, rotation:${rotation}`}</div>
       {errorMessage && (
         <div
           style={{
