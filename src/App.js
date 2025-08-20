@@ -12,6 +12,8 @@ function App() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [rotation, setRotation] = useState(0);
 
+  const [cameraStarted, setCameraStarted] = useState(false);
+
   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition((pos) => {
       return setUserLocation({
@@ -60,8 +62,11 @@ function App() {
     getDeviceOrientation();
     getUserLocation();
     updateMoonPosition();
-    getDeviceCamera();
-  }, [updateMoonPosition]);
+    // Only start camera if user has pressed the button
+    if (cameraStarted) {
+      getDeviceCamera();
+    }
+  }, [updateMoonPosition, cameraStarted]);
 
   // Update moon position when user location changes
   useEffect(() => {
@@ -85,12 +90,13 @@ function App() {
         cameraRef.current.srcObject = stream;
       }
     } catch (err) {
-      setErrorMessage("Enable access to continue");
+      setErrorMessage(err.message || String(err));
+      // setErrorMessage("Enable access to camera");
     }
   };
 
   return (
-    <div className="App">
+  <div className="App">
       <div
         style={{ fontSize: "2rem", color: "#000" }}
       >{`alpha: ${deviceAlpha}, moon: ${moonPos?.azimuth}, user: ${userLocation?.lat}
@@ -110,19 +116,41 @@ function App() {
       )}
 
       {/* Display the feed from the user's camera */}
-      <video
-        autoPlay
-        playsInline
-        ref={cameraRef}
-        style={{
-          position: "absolute",
-          width: "100vw",
-          height: "100vh",
-          objectFit: "cover",
-          zIndex: 0,
-          left: 0,
-        }}
-      />
+      {cameraStarted ? (
+        <video
+          autoPlay
+          playsInline
+          ref={cameraRef}
+          style={{
+            position: "absolute",
+            width: "100vw",
+            height: "100vh",
+            objectFit: "cover",
+            zIndex: 0,
+            left: 0,
+          }}
+        />
+      ) : (
+        <button
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            fontSize: "2rem",
+            padding: "1rem 2rem",
+            zIndex: 1000,
+            background: "#222",
+            color: "#fff",
+            border: "none",
+            borderRadius: 8,
+            boxShadow: "0 2px 8px #0008",
+          }}
+          onClick={() => setCameraStarted(true)}
+        >
+          Start Camera
+        </button>
+      )}
 
       {/* Points towards the moon direction */}
       <div
@@ -141,7 +169,7 @@ function App() {
       </div>
 
       {/* Simulate on desktop with a scroller */}
-      {!navigator.userAgentData.mobile && (
+      {/* {!navigator.userAgentData.mobile && (
         <div
           style={{
             position: "absolute",
@@ -170,7 +198,7 @@ function App() {
             style={{ width: 800 }}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }
