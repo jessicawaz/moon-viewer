@@ -109,7 +109,7 @@ function App() {
       )}
 
       {/* Display the feed from the user's camera */}
-      {/* <video
+      <video
         autoPlay
         playsInline
         ref={cameraRef}
@@ -121,7 +121,7 @@ function App() {
           zIndex: 0,
           left: 0,
         }}
-      /> */}
+      />
 
       {/* Points towards the moon direction */}
       <div
