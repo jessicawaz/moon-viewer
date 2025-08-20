@@ -11,7 +11,6 @@ function App() {
   const [deviceAlpha, setDeviceAlpha] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [rotation, setRotation] = useState(0);
-
   const [cameraStarted, setCameraStarted] = useState(false);
 
   const getUserLocation = () => {
@@ -90,17 +89,12 @@ function App() {
         cameraRef.current.srcObject = stream;
       }
     } catch (err) {
-      setErrorMessage(err.message || String(err));
-      // setErrorMessage("Enable access to camera");
+      setErrorMessage("Enable access to camera");
     }
   };
 
   return (
   <div className="App">
-      <div
-        style={{ fontSize: "2rem", color: "#000" }}
-      >{`alpha: ${deviceAlpha}, moon: ${moonPos?.azimuth}, user: ${userLocation?.lat}
-       ${userLocation?.long}, rotation:${rotation}`}</div>
       {errorMessage && (
         <div
           style={{
@@ -167,38 +161,6 @@ function App() {
       >
         <CiLocationArrow1 size={60} />
       </div>
-
-      {/* Simulate on desktop with a scroller */}
-      {/* {!navigator.userAgentData.mobile && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "10%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            background: "#fff8",
-            padding: 16,
-            borderRadius: 8,
-          }}
-        >
-          <label htmlFor="alpha-slider">
-            Simulate Compass Heading:{" "}
-            {deviceAlpha !== null ? Math.round(deviceAlpha) : 0}°
-          </label>
-          <input
-            id="alpha-slider"
-            type="range"
-            min="0"
-            max="359"
-            value={deviceAlpha !== null ? deviceAlpha : 0}
-            onChange={(e) => {
-              window.isSimulatingAlpha = true;
-              setDeviceAlpha(Number(e.target.value));
-            }}
-            style={{ width: 800 }}
-          />
-        </div>
-      )} */}
     </div>
   );
 }
