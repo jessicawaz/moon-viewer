@@ -76,9 +76,9 @@ function App() {
   // Get user location and device orientation once on mount
   useEffect(() => {
     getDeviceOrientation();
+    getUserLocation();
     updateMoonPosition();
     updateMoonVisibility();
-
     // Only start camera if user has pressed the button
     if (cameraStarted) {
       getDeviceCamera();
@@ -129,41 +129,39 @@ function App() {
           zIndex: 1000,
         }}
       >
-        lat: {userLocation.lat} <br />
+        lat: {userLocation.lat} <br/>
         long: {userLocation.long}
       </div>
 
-      {userLocation.lat && userLocation.long && (
-        <div
-          style={{
-            position: "absolute",
-            top: 90,
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontSize: "1rem",
-            zIndex: 1000,
-          }}
-        >
-          {moonVisibilityTimes.rise && moonVisibilityTimes.set
-            ? `The Moon will be visible from
+      <div
+        style={{
+          position: "absolute",
+          top: 90,
+          left: "50%",
+          transform: "translateX(-50%)",
+          fontSize: "1rem",
+          zIndex: 1000,
+        }}
+      >
+        {moonVisibilityTimes.rise && moonVisibilityTimes.set
+          ? `The Moon will be visible from
         ${moonVisibilityTimes.rise?.toLocaleString(dateLocales, dateOptions)} to
         ${moonVisibilityTimes.set?.toLocaleString(
           dateLocales,
           dateOptions
         )} (Eastern)`
-            : moonVisibilityTimes.rise && !moonVisibilityTimes.set
-            ? `The Moon will be visible starting at ${moonVisibilityTimes.rise?.toLocaleString(
-                dateLocales,
-                dateOptions
-              )} (Eastern)`
-            : !moonVisibilityTimes.rise && moonVisibilityTimes.set
-            ? `The Moon is visible now through ${moonVisibilityTimes.set?.toLocaleString(
-                dateLocales,
-                dateOptions
-              )} (Eastern)`
-            : "The moon will not be visible tonight."}
-        </div>
-      )}
+          : moonVisibilityTimes.rise && !moonVisibilityTimes.set
+          ? `The Moon will be visible starting at ${moonVisibilityTimes.rise?.toLocaleString(
+              dateLocales,
+              dateOptions
+            )} (Eastern)`
+          : !moonVisibilityTimes.rise && moonVisibilityTimes.set
+          ? `The Moon is visible now through ${moonVisibilityTimes.set?.toLocaleString(
+              dateLocales,
+              dateOptions
+            )} (Eastern)`
+          : "The moon will not be visible tonight."}
+      </div>
 
       {errorMessage && (
         <div
@@ -199,7 +197,7 @@ function App() {
         <button
           style={{
             position: "absolute",
-            top: "55%",
+            top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             fontSize: "1rem",
@@ -213,53 +211,25 @@ function App() {
           }}
           onClick={() => setCameraStarted(true)}
         >
-          Access Camera
+          Start Camera
         </button>
       )}
 
-      {userLocation.lat === null || userLocation.long === null ? (
-        <button
-          style={{
-            position: "absolute",
-            top: "65%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            fontSize: "1rem",
-            padding: "1rem 2rem",
-            zIndex: 1000,
-            background: "#222",
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            boxShadow: "0 2px 8px #0008",
-          }}
-          onClick={() => {
-            if (window.confirm("Allow this app to access your location?")) {
-              getUserLocation();
-            }
-          }}
-        >
-          Access Location
-        </button>
-      ) : null}
-
       {/* Points towards the moon direction */}
-      {
-        <div
-          id="pointer"
-          style={{
-            position: "absolute",
-            bottom: "50%",
-            left: "50%",
-            background: "none",
-            pointerEvents: "none",
-            zIndex: 10,
-            transform: `translate(-50%,-50%) rotate(${rotation}deg)`,
-          }}
-        >
-          <CiLocationArrow1 size={60} />
-        </div>
-      }
+      <div
+        id="pointer"
+        style={{
+          position: "absolute",
+          bottom: "50%",
+          left: "50%",
+          background: "none",
+          pointerEvents: "none",
+          zIndex: 10,
+          transform: `translate(-50%,-50%) rotate(${rotation}deg)`,
+        }}
+      >
+        <CiLocationArrow1 size={60} />
+      </div>
     </div>
   );
 }
