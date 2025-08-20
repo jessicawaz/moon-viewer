@@ -60,7 +60,7 @@ function App() {
     getDeviceOrientation();
     getUserLocation();
     updateMoonPosition();
-    // getDeviceCamera();
+    getDeviceCamera();
   }, [updateMoonPosition]);
 
   // Update moon position when user location changes
@@ -91,7 +91,9 @@ function App() {
 
   return (
     <div className="App">
-      <div>{`alpha: ${deviceAlpha}, moon: ${moonPos?.azimuth}, user: ${userLocation?.lat}
+      <div
+        style={{ fontSize: "2rem", color: "#000" }}
+      >{`alpha: ${deviceAlpha}, moon: ${moonPos?.azimuth}, user: ${userLocation?.lat}
        ${userLocation?.long}, rotation:${rotation}`}</div>
       {errorMessage && (
         <div
@@ -127,12 +129,12 @@ function App() {
         id="pointer"
         style={{
           position: "absolute",
-          bottom: "20%",
+          bottom: "50%",
           left: "50%",
           background: "none",
           pointerEvents: "none",
           zIndex: 10,
-          transform: `translateX(-50%) rotate(${rotation}deg)`,
+          transform: `translate(-50%,-50%) rotate(${rotation}deg)`,
         }}
       >
         <CiLocationArrow1 size={60} />
