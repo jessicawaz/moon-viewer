@@ -33,7 +33,17 @@ function App() {
         setErrorMessage(null);
       },
       (err) => {
-        setErrorMessage(err.message || String(err));
+        let message = '';
+        if (err.code === 1) {
+          message = 'Location access denied. Please allow location access in your browser settings and reload the page.';
+        } else if (err.code === 2) {
+          message = 'Location unavailable. Please check your device settings.';
+        } else if (err.code === 3) {
+          message = 'Location request timed out. Please try again.';
+        } else {
+          message = 'Unable to retrieve your location. Error: ' + (err.message || String(err));
+        }
+        setErrorMessage(message);
         setUserLocation({ lat: "N/A", long: "N/A" });
       }
     );
@@ -187,9 +197,18 @@ function App() {
             style={{
               fontSize: "1.5rem",
               marginTop: 40,
+              color: 'red',
+              maxWidth: 500,
             }}
           >
-            {errorMessage}
+            <p>{errorMessage}</p>
+            {errorMessage.includes('denied') && (
+              <p style={{ fontSize: '1rem', marginTop: 8 }}>
+                <strong>Tip:</strong> Check your browser’s site settings to allow location access for <code>moon-viewer.vercel.app</code>.<br />
+                You may need to reload the page after changing permissions.<br />
+                <a href="https://support.google.com/chrome/answer/142065?hl=en" target="_blank" rel="noopener noreferrer">How to manage location settings</a>
+              </p>
+            )}
           </div>
         )}
 
